@@ -1,12 +1,12 @@
 package main
 
 import (
+	_ "embed"
 	"log"
 	"os"
 
-	"github.com/mukeshmahato17/subflux/cmd"
-	"github.com/mukeshmahato17/subflux/config"
-	"github.com/pkg/errors"
+	"github.com/mukeshmahato17/miniflux-sync/cmd"
+	"github.com/mukeshmahato17/miniflux-sync/config"
 	"github.com/urfave/cli/v2"
 )
 
@@ -17,17 +17,11 @@ func main() {
 	cfg := config.New(version)
 
 	app := &cli.App{
-		Name:    "subflux-sync",
-		Usage:   "Manage and sync your Subflux feeds with YAML. ",
-		Version: cfg.Version,
-		Flags:   cfg.Flags(),
-		Action: func(ctx *cli.Context) error {
-			if err := cmd.Sync(cfg); err != nil {
-				return errors.Wrap(err, "running sync command")
-			}
-
-			return nil
-		},
+		Name:     "miniflux-sync",
+		Usage:    "Manage and sync your Miniflux feeds with YAML or OPML.",
+		Version:  cfg.Version,
+		Flags:    cfg.Flags(),
+		Commands: cmd.Commands(cfg),
 	}
 
 	if err := app.Run(os.Args); err != nil {

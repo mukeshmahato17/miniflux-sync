@@ -3,7 +3,7 @@ package api
 import (
 	"log"
 
-	"github.com/mukeshmahato17/subflux/config"
+	"github.com/mukeshmahato17/miniflux-sync/config"
 	"github.com/pkg/errors"
 	miniflux "miniflux.app/v2/client"
 )

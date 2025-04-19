@@ -21,8 +21,8 @@ func (c *Config) Flags() []cli.Flag {
 	return []cli.Flag{
 		&cli.StringFlag{
 			Name:        "endpoint",
-			Usage:       "Subflux API endpoint.",
-			EnvVars:     []string{"SUBFLUX_SYNC_ENDPOINT"},
+			Usage:       "Miniflux API endpoint.",
+			EnvVars:     []string{"MINIFLUX_SYNC_ENDPOINT"},
 			Destination: &c.Endpoint,
 			Aliases:     []string{"e"},
 			Required:    true,

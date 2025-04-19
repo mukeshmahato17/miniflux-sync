@@ -3,13 +3,13 @@ package cmd
 import (
 	"log"
 
-	"github.com/mukeshmahato17/subflux/api"
-	"github.com/mukeshmahato17/subflux/config"
+	"github.com/mukeshmahato17/miniflux-sync/api"
+	"github.com/mukeshmahato17/miniflux-sync/config"
 	"github.com/pkg/errors"
 )
 
 // Sync is the entry point for the sync command in the CLI.
-func Sync(cfg *config.Config) error {
+func sync(cfg *config.Config) error {
 	client, err := api.Client(cfg)
 	if err != nil {
 		return errors.Wrap(err, "creating miniflux client")
