@@ -5,8 +5,7 @@ import "github.com/urfave/cli/v2"
 // Config holds the configuration for the CLI.
 type Config struct {
 	Endpoint string
-	Username string
-	Password string
+	APIKey   string
 	Version  string
 }
 
@@ -29,19 +28,11 @@ func (c *Config) Flags() []cli.Flag {
 			Required:    true,
 		},
 		&cli.StringFlag{
-			Name:        "username",
-			Usage:       "Subflux API username.",
-			EnvVars:     []string{"SUBFLUX_SYNC_USERNAME"},
-			Destination: &c.Username,
-			Aliases:     []string{"u"},
-			Required:    true,
-		},
-		&cli.StringFlag{
-			Name:        "password",
-			Usage:       "Subflux API password.",
-			EnvVars:     []string{"SUBFLUX_SYNC_PASSWORD"},
-			Destination: &c.Password,
-			Aliases:     []string{"p"},
+			Name:        "api-key",
+			Usage:       "Miniflux API key.",
+			EnvVars:     []string{"MINIFLUX_SYNC_API_KEY"},
+			Destination: &c.APIKey,
+			Aliases:     []string{"a"},
 			Required:    true,
 		},
 	}
