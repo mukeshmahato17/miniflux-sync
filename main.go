@@ -10,13 +10,17 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+//go:embed VERSION
+var version string
+
 func main() {
-	cfg := config.New()
+	cfg := config.New(version)
 
 	app := &cli.App{
-		Name:  "subflux-sync",
-		Usage: "Manage and sync your Subflux feeds with YAML. ",
-		Flags: cfg.Flags(),
+		Name:    "subflux-sync",
+		Usage:   "Manage and sync your Subflux feeds with YAML. ",
+		Version: cfg.Version,
+		Flags:   cfg.Flags(),
 		Action: func(ctx *cli.Context) error {
 			if err := sync.Sync(); err != nil {
 				return errors.Wrap(err, "syncing config")
