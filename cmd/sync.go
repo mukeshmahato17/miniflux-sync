@@ -26,12 +26,6 @@ func sync(cfg *config.GlobalFlags, flags *config.SyncFlags) error {
 
 		// TODO: Implement logic for YAML.
 
-	case ".opml":
-		log.Println("importing from opml file")
-
-		// TODO: Implement logic for OPML.
-		return errors.New("opml file format not implemented")
-
 	default:
 		return errors.New("invalid file extension") // Should never happen, as we validate flag before.
 
