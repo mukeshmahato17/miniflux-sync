@@ -6,20 +6,22 @@ import (
 
 	"github.com/mukeshmahato17/miniflux-sync/api"
 	"github.com/mukeshmahato17/miniflux-sync/config"
+	"github.com/mukeshmahato17/miniflux-sync/diff"
 	"github.com/mukeshmahato17/miniflux-sync/parse"
 	"github.com/pkg/errors"
+	miniflux "miniflux.app/v2/client"
 )
 
 // Sync is the entry point for the sync command in the CLI.
-func sync(cfg *config.GlobalFlags, flags *config.SyncFlags) error {
-	var localConfig *parse.LocalConfig
+func sync(flags *config.SyncFlags, client *miniflux.Client) error {
+	var localState *diff.State
 	var err error
 
 	// TODO: Add dry run support.
 
 	switch filepath.Ext(flags.Path) {
 	case ".yaml", ".yml":
-		localConfig, err = parse.LoadYAML(flags.Path)
+		localState, err = parse.Parse(flags.Path)
 		if err != nil {
 			return errors.Wrap(err, "loading data from yaml file")
 		}
@@ -31,22 +33,31 @@ func sync(cfg *config.GlobalFlags, flags *config.SyncFlags) error {
 
 	}
 
-	log.Printf("local feeds: %d\n", len(localConfig.FeedsByCategory))
-	log.Printf("local categories: %d\n", len(localConfig.FeedsByCategory))
+	log.Printf("local feeds: %d", len((localState.FeedURLs())))
+	log.Printf("local categories: %d", len(localState.CategoryTitles()))
 
-	client, err := api.Client(cfg)
-	if err != nil {
-		return errors.Wrap(err, "creating miniflux client")
-	}
-
-	feedsByCategory, err := api.GetFeedsByCategories(client)
+	remoteState, err := api.FetchState(client)
 	if err != nil {
 		return errors.Wrap(err, "getting feeds by category")
 	}
 
-	// TODO: feedsByCategory and localConfig do the same thing, merge them in a new package.
-	log.Printf("remote feeds: %d\n", len(feedsByCategory.Feeds()))
-	log.Printf("remote categories: %d\n", len(feedsByCategory))
+	log.Printf("remote feeds: %d", len(remoteState.FeedURLs()))
+	log.Printf("remote categories: %d", len(remoteState.CategoryTitles()))
+
+	actions, err := diff.CalculateDiff(localState, remoteState)
+	if err != nil {
+		return errors.Wrap(err, "calculating diff")
+	}
+
+	if len(actions) == 0 {
+		log.Printf("no actions to perform")
+		return nil
+	}
+
+	log.Printf("%d actions to perform:", len(actions))
+	for _, action := range actions {
+		log.Printf("%s: %s / %s", action.Type, action.CategoryTitle, action.FeedURL)
+	}
 
 	// TODO: Implement diff logic.
 	// TODO: Implement update logic.
