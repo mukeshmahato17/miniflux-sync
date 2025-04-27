@@ -13,7 +13,7 @@ import (
 )
 
 // Sync is the entry point for the sync command in the CLI.
-func sync(flags *config.SyncFlags, client *miniflux.Client) error {
+func sync(flags *config.SyncFlags, client *miniflux.Client) error { //nolint:cyclop
 	var localState *diff.State
 	var err error
 
@@ -34,9 +34,14 @@ func sync(flags *config.SyncFlags, client *miniflux.Client) error {
 	log.Printf("local feeds: %d", len((localState.FeedURLs())))
 	log.Printf("local categories: %d", len(localState.CategoryTitles()))
 
-	remoteState, err := api.FetchState(client)
+	feeds, categories, err := api.FetchData(client)
 	if err != nil {
-		return errors.Wrap(err, "getting feeds by category")
+		return errors.Wrap(err, "fetching data")
+	}
+
+	remoteState, err := api.GenerateDiffState(feeds)
+	if err != nil {
+		return errors.Wrap(err, "generating remote state")
 	}
 
 	log.Printf("remote feeds: %d", len(remoteState.FeedURLs()))
@@ -54,7 +59,7 @@ func sync(flags *config.SyncFlags, client *miniflux.Client) error {
 
 	log.Printf("%d actions to perform:", len(actions))
 	for _, action := range actions {
-		log.Printf("%s: %s / %s", action.Type, action.CategoryTitle, action.FeedURL)
+		log.Printf(`%s: "%s / %s"`, action.Type, action.CategoryTitle, action.FeedURL)
 	}
 
 	if flags.DryRun {
@@ -62,7 +67,9 @@ func sync(flags *config.SyncFlags, client *miniflux.Client) error {
 		return nil
 	}
 
-	// TODO: Implement update logic.
+	if err := api.Update(client, actions, feeds, categories); err != nil {
+		return errors.Wrap(err, "performing actions")
+	}
 
 	return nil
 }
