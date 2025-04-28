@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"context"
+
 	"github.com/mukeshmahato17/miniflux-sync/api"
 	"github.com/mukeshmahato17/miniflux-sync/config"
 	"github.com/pkg/errors"
@@ -8,7 +10,7 @@ import (
 )
 
 // Commands returns the commands for the CLI.
-func Commands(cfg *config.GlobalFlags) []*cli.Command {
+func Commands(ctx context.Context, cfg *config.GlobalFlags) []*cli.Command {
 	dumpFlags := &config.DumpFlags{}
 	syncFlags := &config.SyncFlags{}
 
@@ -17,14 +19,14 @@ func Commands(cfg *config.GlobalFlags) []*cli.Command {
 			Name:    "sync",
 			Aliases: []string{"s"},
 			Usage:   "Update Miniflux using a local YAML file.",
-			Flags:   syncFlags.Flags(),
-			Action: func(ctx *cli.Context) error {
-				client, err := api.Client(cfg)
+			Flags:   syncFlags.Flags(ctx),
+			Action: func(*cli.Context) error {
+				client, err := api.Client(ctx, cfg)
 				if err != nil {
 					return errors.Wrap(err, "creating miniflux client")
 				}
 
-				if err := sync(syncFlags, client); err != nil {
+				if err := sync(ctx, syncFlags, client); err != nil {
 					return errors.Wrap(err, "running sync command")
 				}
 
@@ -34,15 +36,15 @@ func Commands(cfg *config.GlobalFlags) []*cli.Command {
 		{
 			Name:    "dump",
 			Aliases: []string{"d"},
-			Flags:   dumpFlags.Flags(),
 			Usage:   "Dump the current remote Miniflux state to your machine.",
-			Action: func(ctx *cli.Context) error {
-				client, err := api.Client(cfg)
+			Flags:   dumpFlags.Flags(ctx),
+			Action: func(*cli.Context) error {
+				client, err := api.Client(ctx, cfg)
 				if err != nil {
 					return errors.Wrap(err, "creating miniflux client")
 				}
 
-				if err := dump(dumpFlags, client); err != nil {
+				if err := dump(ctx, dumpFlags, client); err != nil {
 					return errors.Wrap(err, "running dump command")
 				}
 
