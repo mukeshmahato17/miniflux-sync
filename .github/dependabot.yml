@@ -4,8 +4,10 @@
      directory: "/"
      target-branch: "main"
      schedule:
-       interval: daily
-       timezone: Asia/Kathmandu
+       interval: "monthly"
+       day: "friday"          # Run on the first day of the month
+       time: "05:00"         # 5 AM UTC (10:45 AM NPT)
+       timezone: "Asia/Kathmandu"
      assignees:
        - "mukeshmahato17"
      ignore:
