@@ -14,8 +14,6 @@ import (
 
 // TODO: Improve test coverage.
 // TODO: Define release process.
-// TODO: Check that input files exist.
-// TODO: Export remote as YAML.
 
 //go:embed VERSION
 var version string
