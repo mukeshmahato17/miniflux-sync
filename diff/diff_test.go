@@ -239,6 +239,63 @@ func TestCalculateDiff(t *testing.T) { //nolint:funlen
 				},
 			},
 		},
+
+		"RenameCategoryButKeepFeeds": {
+			local: map[string][]string{
+				"General": {
+					"https://tech.com/feed",
+					"https://oldtech.com/feed",
+					"https://newtech.com/feed",
+				},
+			},
+			remote: map[string][]string{
+				"Tech": {
+					"https://tech.com/feed",
+					"https://oldtech.com/feed",
+					"https://newtech.com/feed",
+				},
+			},
+			expected: []diff.Action{
+				{
+					Type:          diff.DeleteFeed,
+					FeedURL:       "https://newtech.com/feed",
+					CategoryTitle: "Tech",
+				},
+				{
+					Type:          diff.DeleteFeed,
+					FeedURL:       "https://oldtech.com/feed",
+					CategoryTitle: "Tech",
+				},
+				{
+					Type:          diff.DeleteFeed,
+					FeedURL:       "https://tech.com/feed",
+					CategoryTitle: "Tech",
+				},
+				{
+					Type:          diff.DeleteCategory,
+					CategoryTitle: "Tech",
+				},
+				{
+					Type:          diff.CreateCategory,
+					CategoryTitle: "General",
+				},
+				{
+					Type:          diff.CreateFeed,
+					FeedURL:       "https://newtech.com/feed",
+					CategoryTitle: "General",
+				},
+				{
+					Type:          diff.CreateFeed,
+					FeedURL:       "https://oldtech.com/feed",
+					CategoryTitle: "General",
+				},
+				{
+					Type:          diff.CreateFeed,
+					FeedURL:       "https://tech.com/feed",
+					CategoryTitle: "General",
+				},
+			},
+		},
 	}
 
 	for name, testCase := range tests {
