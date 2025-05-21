@@ -11,6 +11,18 @@ Manage and sync your [Miniflux](https://github.com/miniflux/v2) feeds with YAML.
  > This project is yet to make a release.
  
  ## Usage
+
+ Configure the CLI to use and authenticate with your Miniflux instance:
+
+```bash
+# Use environment variables
+MINIFLUX_SYNC_ENDPOINT=... MINIFLUX_SYNC_API_KEY=... miniflux-sync -h
+
+# Or via CLI flags
+miniflux-sync --endpoint="..." --api-key="..." -h
+```
+
+Then run the CLI:
  
  ```bash
  # Help
