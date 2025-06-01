@@ -47,3 +47,7 @@ Then run the CLI:
  # Running tests
  go test -cover ./...
  ```
+
+ More actions
+# Bump VERSION, and run script
+GITHUB_TOKEN="..." ./scripts/release.sh
