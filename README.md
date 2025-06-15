@@ -1,5 +1,10 @@
 # miniflux-sync
 
+![GitHub Release](https://img.shields.io/github/v/release/mukeshmahato17/miniflux-sync?label=Release)Add commentMore actions
+![GitHub branch check runs](https://img.shields.io/github/check-runs/mukeshmahato17/miniflux-sync/main?label=Checks)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/mukeshmahato17/miniflux-sync)
+![GitHub License](https://img.shields.io/github/license/mukeshmahato17/miniflux-sync?label=License)
+
 Manage and sync your [Miniflux](https://github.com/miniflux/v2) feeds with YAML.
 
 ![YAML config](./.resources/config.png)
@@ -7,8 +12,8 @@ Manage and sync your [Miniflux](https://github.com/miniflux/v2) feeds with YAML.
  
  ## Install
  
- > [!IMPORTANT]
- > This project is yet to make a release.
+- Download the [latest release](https://github.com/mukeshmahato17/miniflux-sync/releases)
+- For macOS, follow these [steps](https://support.apple.com/en-il/guide/mac-help/mchleab3a043/mac)
  
  ## Usage
 
